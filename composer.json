@@ -1,0 +1,51 @@
+{
+  "name" : "prismx/laravel-generators",
+  "description" : "",
+  "keywords" : [
+    "prismx",
+    "laravel-generators"
+  ],
+  "homepage" : "https://github.com/prism-x/laravel-generators",
+  "license" : "MIT",
+  "authors" : [
+    {
+      "name" : "João Magalhães",
+      "email" : "joao@orgo.ee",
+      "role" : "Developer"
+    }
+  ],
+  "require" : {
+    "php": "^7.3",
+    "illuminate/support": "^6.8",
+    "symfony/yaml": "^5.0"
+  },
+  "require-dev" : {
+    "orchestra/testbench" : "^4.4",
+    "phpunit/phpunit" : "^8.2",
+    "symfony/var-dumper" : "^4.3"
+  },
+  "autoload" : {
+    "psr-4" : {
+      "PrismX\\Generators\\" : "src"
+    }
+  },
+  "autoload-dev" : {
+    "psr-4" : {
+      "PrismX\\Generators\\Tests\\" : "tests"
+    }
+  },
+  "scripts" : {
+    "test" : "vendor/bin/phpunit",
+    "test-coverage" : "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config" : {
+    "sort-packages" : true
+  },
+  "extra" : {
+    "laravel" : {
+      "providers" : [
+        "PrismX\\Generators\\GeneratorServiceProvider"
+      ]
+    }
+  }
+}
