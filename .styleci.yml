@@ -1,8 +1,12 @@
 preset: laravel
 
+enabled:
+  - length_ordered_imports
+
 disabled:
   - single_class_element_per_statement
   - self_accessor
+  - alpha_ordered_imports
 
 finder:
   exclude:
