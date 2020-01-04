@@ -1,0 +1,3 @@
+Team:
+  name: string
+  owner_id: id:user

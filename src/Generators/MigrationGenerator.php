@@ -2,47 +2,33 @@
 
 namespace PrismX\Generators\Generators;
 
-use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use PrismX\Generators\Support\Model;
 use PrismX\Generators\Support\AbstractGenerator;
 
 class MigrationGenerator extends AbstractGenerator
 {
-    public function output(): array
+    public function run()
     {
-        $output = [];
-
         $stub = File::get(STUBS_PATH . '/migration.stub');
-
-        $sequential_timestamp = \Carbon\Carbon::now()->subSeconds(count($this->tree));
-
-        foreach ($this->tree as $model) {
-            $path = $this->getPath($model, $sequential_timestamp->addSecond());
-
-            File::put($path, $this->populateStub($stub, $model));
-
-            $output['created'][] = $path;
-        }
-
-        return $output;
+        File::put($this->getPath(), $this->populateStub($stub));
+        return "{$this->model->name()} migration created successfully <comment>[{$this->getPath()}]</comment>";
     }
 
-    protected function populateStub(string $stub, Model $model)
+    protected function populateStub(string $stub)
     {
-        $stub = str_replace('{{ClassName}}', $this->getClassName($model), $stub);
-        $stub = str_replace('{{TableName}}', $model->tableName(), $stub);
-        $stub = str_replace('{{schema}}', $this->buildDefinition($model), $stub);
+        $stub = str_replace('{{ClassName}}', $this->getClassName(), $stub);
+        $stub = str_replace('{{TableName}}', $this->model->tableName(), $stub);
+        $stub = str_replace('{{schema}}', $this->buildDefinition(), $stub);
 
         return $stub;
     }
 
-    protected function buildDefinition(Model $model)
+    protected function buildDefinition()
     {
         $definition = '';
 
-        foreach ($model->columns() as $column) {
+        foreach ($this->model->columns() as $column) {
             $dataType = $column->dataType();
             if ($column->name() === 'id') {
                 $dataType = 'increments';
@@ -73,26 +59,26 @@ class MigrationGenerator extends AbstractGenerator
             $definition .= ';' . PHP_EOL;
         }
 
-        if ($model->usesSoftDeletes()) {
-            $definition .= self::INDENT . '$table->' . $model->softDeletesDataType() . '();' . PHP_EOL;
+        if ($this->model->usesSoftDeletes()) {
+            $definition .= self::INDENT . '$table->' . $this->model->softDeletesDataType() . '();' . PHP_EOL;
         }
 
-        if ($model->usesTimestamps()) {
-            $definition .= self::INDENT . '$table->' . $model->timestampsDataType() . '();' . PHP_EOL;
+        if ($this->model->usesTimestamps()) {
+            $definition .= self::INDENT . '$table->' . $this->model->timestampsDataType() . '();' . PHP_EOL;
         }
 
         return trim($definition);
     }
 
-    protected function getClassName(Model $model)
+    protected function getClassName()
     {
-        return 'Create' . Str::studly($model->tableName()) . 'Table';
+        return 'Create' . Str::studly($this->model->tableName()) . 'Table';
     }
 
-    protected function getPath(Model $model, Carbon $timestamp)
+    protected function getPath()
     {
-        $check = glob('database/migrations/*_create_' . $model->tableName() . '_table.php');
+        $check = glob('database/migrations/*_create_' . $this->model->tableName() . '_table.php');
 
-        return $check[0] ?? 'database/migrations/' . $timestamp->format('Y_m_d_His') . '_create_' . $model->tableName() . '_table.php';
+        return $check[0] ?? 'database/migrations/' . \Carbon\Carbon::now()->format('Y_m_d_His') . '_create_' . $this->model->tableName() . '_table.php';
     }
 }

@@ -10,45 +10,57 @@ use PrismX\Generators\Support\AbstractGenerator;
 class NovaResourceGenerator extends AbstractGenerator
 {
     protected $imports = [];
-    public function output()
+
+    public function run()
     {
         if (! config('generators.generate_nova_resource')) {
-            return null;
+            return;
         }
-        $output = [];
 
         $stub = File::get(STUBS_PATH . '/novaResource.stub');
-
-        foreach ($this->tree as $model) {
-            $path = $this->getPath($model);
-            File::put($path, $this->populateStub($stub, $model));
-
-//            $this->info(crea)$path;
-        }
-
-        return $output;
+        File::put($this->getPath(), $this->populateStub($stub));
+        return "{$this->model->name()} nova resource created successfully <comment>[{$this->getPath()}]</comment>";
     }
 
-    protected function getPath(Model $model)
+//    public function output()
+//    {
+//        if (! config('generators.generate_nova_resource')) {
+//            return null;
+//        }
+//        $output = [];
+//
+//        $stub = File::get(STUBS_PATH . '/novaResource.stub');
+//
+//        foreach ($this->tree as $model) {
+//            $path = $this->getPath($model);
+//            File::put($path, $this->populateStub($stub, $model));
+//
+////            $this->info(crea)$path;
+//        }
+//
+//        return $output;
+//    }
+
+    protected function getPath()
     {
-        return "app/Nova/{$model->name()}.php";
+        return "app/Nova/{$this->model->name()}.php";
     }
 
-    protected function populateStub(string $stub, Model $model)
+    protected function populateStub(string $stub)
     {
-        $stub = str_replace('{{ClassName}}', $model->name(), $stub);
-        $stub = str_replace('{{ModelName}}', '\\'.config('generators.model_namespace')."\\{$model->name()}", $stub);
-        $stub = str_replace('{{fields}}', $this->buildDefinition($model), $stub);
-        $stub = str_replace('{{imports}}', $this->buildImports($model), $stub);
+        $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
+        $stub = str_replace('{{ModelName}}', '\\' . config('generators.model_namespace') . "\\{$this->model->name()}", $stub);
+        $stub = str_replace('{{fields}}', $this->buildDefinition(), $stub);
+        $stub = str_replace('{{imports}}', $this->buildImports(), $stub);
 
         return $stub;
     }
 
-    protected function buildDefinition(Model $model)
+    protected function buildDefinition()
     {
         $definition = '';
 
-        foreach ($model->columns() as $column) {
+        foreach ($this->model->columns() as $column) {
             if ($column->name() === 'id') {
                 continue;
             }
@@ -81,7 +93,7 @@ class NovaResourceGenerator extends AbstractGenerator
         return Str::title(str_replace('_', ' ', $string));
     }
 
-    protected function buildImports(Model $model)
+    protected function buildImports()
     {
         return collect($this->imports)->unique()->map(function ($import) {
             return "use {$import};";
@@ -124,7 +136,7 @@ class NovaResourceGenerator extends AbstractGenerator
             'smallint' => 'Number',
             'decimal' => 'Number',
             'float' => 'Number',
-            'boolean' => 'Boolean'
+            'boolean' => 'Boolean',
         ];
 
         return $novaTypes[$type] ?? 'Text';

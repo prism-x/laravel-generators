@@ -2,15 +2,18 @@
 
 namespace PrismX\Generators\Support;
 
+use Illuminate\Filesystem\Filesystem;
+
 abstract class AbstractGenerator
 {
     const INDENT = '            ';
 
-    protected $tree;
+    /* @var \PrismX\Generators\Support\Model */
+    protected $model;
 
-    public function __construct(array $tree)
+    public function __construct(Model $model)
     {
-        $this->tree = $tree;
-        $this->output();
+        $this->model = $model;
+
     }
 }

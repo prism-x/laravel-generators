@@ -1,48 +1,35 @@
 <?php
 
-
 namespace PrismX\Generators\Generators;
 
-
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use PrismX\Generators\Support\AbstractGenerator;
-use PrismX\Generators\Support\Model;
 
 class SeedGenerator extends AbstractGenerator
 {
-    public function output(): array
+    public function run()
     {
-        $output = [];
-
         $stub = File::get(STUBS_PATH . '/seed.stub');
-
-        foreach ($this->tree as $model) {
-            $path = $this->getPath($model);
-            File::put($path, $this->populateStub($stub, $model));
-
-            $output['created'][] = $path;
-        }
-
-        return $output;
+        File::put($this->getPath(), $this->populateStub($stub));
+        return "{$this->model->name()} seed created successfully <comment>[{$this->getPath()}]</comment>";
     }
 
-    protected function getPath(Model $model)
+    protected function getPath()
     {
-        return 'database/seeds/' . $model->pluralName() . 'TableSeeder.php';
+        return 'database/seeds/' . $this->model->pluralName() . 'TableSeeder.php';
     }
 
-    protected function populateStub(string $stub, Model $model)
+    protected function populateStub(string $stub)
     {
         $stub = str_replace('{{Namespace}}', config('generators.model_namespace'), $stub);
-        $stub = str_replace('{{ClassName}}', $this->getClassName($model), $stub);
-        $stub = str_replace('{{factoryClass}}', config('generators.model_namespace'). "\\{$model->name()}", $stub);
+        $stub = str_replace('{{ClassName}}', $this->getClassName(), $stub);
+        $stub = str_replace('{{factoryClass}}', config('generators.model_namespace'). "\\{$this->model->name()}", $stub);
 
         return $stub;
     }
 
-    protected function getClassName(Model $model)
+    protected function getClassName()
     {
-        return $model->pluralName() . 'TableSeeder';
+        return $this->model->pluralName() . 'TableSeeder';
     }
 }

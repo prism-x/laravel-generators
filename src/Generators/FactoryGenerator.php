@@ -1,53 +1,41 @@
 <?php
 
-
 namespace PrismX\Generators\Generators;
 
-
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use PrismX\Generators\Support\AbstractGenerator;
-use PrismX\Generators\Support\Model;
 
 class FactoryGenerator extends AbstractGenerator
 {
     const INDENT = '        ';
 
-    public function output(): array
+    public function run(): string
     {
-        $output = [];
-
         $stub = File::get(STUBS_PATH . '/factory.stub');
-
-        foreach ($this->tree as $model) {
-            $path = $this->getPath($model);
-            File::put($path, $this->populateStub($stub, $model));
-
-            $output['created'][] = $path;
-        }
-
-        return $output;
+        File::put($this->getPath(), $this->populateStub($stub));
+        return "{$this->model->name()} factory created successfully <comment>[{$this->getPath()}]</comment>";
     }
 
-    protected function getPath(Model $model)
+    public function getPath()
     {
-        return 'database/factories/' . $model->name() . 'Factory.php';
+        return 'database/factories/' . $this->model->name() . 'Factory.php';
     }
 
-    protected function populateStub(string $stub, Model $model)
+    public function populateStub(string $stub)
     {
         $stub = str_replace('{{Namespace}}', config('generators.model_namespace'), $stub);
-        $stub = str_replace('{{ClassName}}', $model->name(), $stub);
-        $stub = str_replace('{{fields}}', $this->buildDefinition($model), $stub);
+        $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
+        $stub = str_replace('{{fields}}', $this->buildDefinition(), $stub);
 
         return $stub;
     }
 
-    protected function buildDefinition(Model $model)
+    protected function buildDefinition()
     {
         $definition = '';
 
-        foreach ($model->columns() as $column) {
+        foreach ($this->model->columns() as $column) {
             if ($column->name() === 'id') {
                 continue;
             }

@@ -26,14 +26,24 @@ class Build extends Command
             $this->error('Blueprint file could not be found: ' . $file);
         }
 
-        $contents = Yaml::parse(File::get($file));
+        $content = preg_replace_callback('/^(\s+)(id|timestamps(Tz)?|softDeletes(Tz)?)$/mi', function ($matches) {
+            return $matches[1] . strtolower($matches[2]) . ': ' . $matches[2];
+        }, File::get($file));
+
+        $contents = Yaml::parse($content);
 
         $this->blueprint = (new Lexer())->analyze($contents);
 
-        new ModelGenerator($this->blueprint);
-        new MigrationGenerator($this->blueprint);
-        new FactoryGenerator($this->blueprint);
-        new SeedGenerator($this->blueprint);
-        new NovaResourceGenerator($this->blueprint);
+        collect($this->blueprint)->each(function ($model) {
+            $this->info('********************');
+            $this->info("* {$model->name()}");
+            $this->info('********************');
+            $this->info((new FactoryGenerator($model))->run());
+            $this->info((new MigrationGenerator($model))->run());
+            $this->info((new ModelGenerator($model))->run());
+            $this->info((new NovaResourceGenerator($model))->run());
+            $this->info((new SeedGenerator($model))->run());
+            $this->line('');
+        });
     }
 }

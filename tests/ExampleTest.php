@@ -2,9 +2,6 @@
 
 namespace PrismX\Generators\Tests;
 
-use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
-
 class ExampleTest extends TestCase
 {
     /** @test */
