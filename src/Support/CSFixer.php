@@ -17,7 +17,7 @@ class CSFixer
             $process = new Process(array_merge([
                 base_path('vendor/bin/php-cs-fixer'),
                 'fix',
-                '--config=' . base_path('.php_cs'),
+                '--config='.base_path('.php_cs'),
             ], $this->paths()->toArray()));
 
             $process->run();
@@ -34,7 +34,7 @@ class CSFixer
     {
         $modelsPath = Str::camel(str_replace('\\', '/', config('generators.model_namespace')));
 
-        $models = glob(base_path($modelsPath . '/*.php'));
+        $models = glob(base_path($modelsPath.'/*.php'));
 
         return collect([
             Storage::path('generators/cache'),

@@ -17,7 +17,7 @@ class NovaResourceGenerator extends AbstractGenerator
     public function __construct(Model $model)
     {
         parent::__construct($model);
-        $this->stub = File::get(STUBS_PATH . '/novaResource.stub');
+        $this->stub = File::get(STUBS_PATH.'/novaResource.stub');
     }
 
     protected function getPath(): string
@@ -29,7 +29,7 @@ class NovaResourceGenerator extends AbstractGenerator
     {
         $stub = $this->stub;
         $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
-        $stub = str_replace('{{ModelName}}', '\\' . config('generators.model_namespace') . "\\{$this->model->name()}", $stub);
+        $stub = str_replace('{{ModelName}}', '\\'.config('generators.model_namespace')."\\{$this->model->name()}", $stub);
         $stub = str_replace('{{fields}}', $this->buildDefinition(), $stub);
         $stub = str_replace('{{imports}}', $this->buildImports(), $stub);
 
@@ -51,7 +51,7 @@ class NovaResourceGenerator extends AbstractGenerator
 
                 $definition .= self::INDENT;
                 $definition .= sprintf("BelongsTo::make('%s')", $class);
-                $definition .= ',' . PHP_EOL;
+                $definition .= ','.PHP_EOL;
 
                 $this->imports[] = 'Laravel\Nova\Fields\BelongsTo';
             } else {
@@ -59,7 +59,7 @@ class NovaResourceGenerator extends AbstractGenerator
 
                 $definition .= self::INDENT;
                 $definition .= sprintf("%s::make('%s')", $fieldType, $this->titleCase($column->name()));
-                $definition .= ',' . PHP_EOL;
+                $definition .= ','.PHP_EOL;
 
                 $this->imports[] = "Laravel\Nova\Fields\\{$fieldType}";
             }
@@ -76,7 +76,7 @@ class NovaResourceGenerator extends AbstractGenerator
     protected function buildImports()
     {
         return collect($this->imports)->unique()->sort(function ($a, $b) {
-            return strlen($a)-strlen($b);
+            return strlen($a) - strlen($b);
         })->map(function ($import) {
             return "use {$import};";
         })->implode(PHP_EOL);

@@ -23,7 +23,7 @@ class Build extends Command
     {
         $file = $this->argument('blueprint');
         if (! file_exists($file)) {
-            $this->error('Blueprint file could not be found: ' . $file);
+            $this->error('Blueprint file could not be found: '.$file);
         }
 
         $this->blueprint = Blueprint::make($file);
