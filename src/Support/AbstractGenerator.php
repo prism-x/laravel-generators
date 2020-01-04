@@ -25,12 +25,12 @@ abstract class AbstractGenerator
 
     public function setCache($key, $contents)
     {
-        Storage::put('generators/cache/'.md5($key).'.php', $contents);
+        Storage::put('generators/cache/' . md5($key) . '.php', $contents);
     }
 
     public function getCache($key)
     {
-        $file = 'generators/cache/'.md5($key).'.php';
+        $file = 'generators/cache/' . md5($key) . '.php';
 
         return Storage::exists($file) ? Storage::get($file) : null;
     }
@@ -46,7 +46,7 @@ abstract class AbstractGenerator
         }
 
         if ($currentFile === $parsedStub || $cached === $parsedStub) {
-            return;
+            return null;
         }
 
         if (! $cached || ! File::exists($this->getpath())) {

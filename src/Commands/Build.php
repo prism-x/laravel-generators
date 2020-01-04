@@ -4,13 +4,13 @@ namespace PrismX\Generators\Commands;
 
 use Illuminate\Console\Command;
 use PrismX\Generators\Blueprint;
-use PrismX\Generators\Generators\FactoryGenerator;
-use PrismX\Generators\Generators\MigrationGenerator;
-use PrismX\Generators\Generators\ModelGenerator;
-use PrismX\Generators\Generators\NovaResourceGenerator;
-use PrismX\Generators\Generators\SeedGenerator;
 use PrismX\Generators\Support\CSFixer;
 use Symfony\Component\Console\Helper\Table;
+use PrismX\Generators\Generators\SeedGenerator;
+use PrismX\Generators\Generators\ModelGenerator;
+use PrismX\Generators\Generators\FactoryGenerator;
+use PrismX\Generators\Generators\MigrationGenerator;
+use PrismX\Generators\Generators\NovaResourceGenerator;
 
 class Build extends Command
 {
@@ -23,7 +23,7 @@ class Build extends Command
     {
         $file = $this->argument('blueprint');
         if (! file_exists($file)) {
-            $this->error('Blueprint file could not be found: '.$file);
+            $this->error('Blueprint file could not be found: ' . $file);
         }
 
         $this->blueprint = Blueprint::make($file);
