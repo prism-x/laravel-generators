@@ -5,6 +5,7 @@ namespace PrismX\Generators\Commands;
 use Illuminate\Console\Command;
 use PrismX\Generators\Blueprint;
 use PrismX\Generators\Support\CSFixer;
+use Symfony\Component\Console\Helper\Table;
 use PrismX\Generators\Generators\SeedGenerator;
 use PrismX\Generators\Generators\ModelGenerator;
 use PrismX\Generators\Generators\FactoryGenerator;
@@ -27,25 +28,49 @@ class Build extends Command
 
         $this->blueprint = Blueprint::make($file);
 
-        collect($this->blueprint)->each(function ($model) {
-            $this->info('+--------------------');
-            $this->info("| {$model->name()}");
-            $this->info('+--------------------');
+//        collect($this->blueprint)->each(function ($model) {
+//            $this->info('+--------------------');
+//            $this->info("| {$model->name()}");
+//            $this->info('+--------------------');
+//
+//            $this->info((new FactoryGenerator($model))->run());
+//            $this->info((new MigrationGenerator($model))->run());
+//            $this->info((new ModelGenerator($model))->run());
+//            $this->info((new SeedGenerator($model))->run());
+//
+//            if (config('generators.nova_resources')) {
+//                $this->info((new NovaResourceGenerator($model))->run());
+//            }
+//
+//            $this->line('');
+//        });
 
-            $this->info((new FactoryGenerator($model))->run());
-            $this->info((new MigrationGenerator($model))->run());
-            $this->info((new ModelGenerator($model))->run());
-            $this->info((new SeedGenerator($model))->run());
+        collect($this->blueprint)->mapWithKeys(function ($model) {
+            return [
+                $model->name() => collect([
+                    (new FactoryGenerator($model))->run(),
+                    (new MigrationGenerator($model))->run(),
+                    (new ModelGenerator($model))->run(),
+                    (new SeedGenerator($model))->run(),
+                    config('generators.nova_resources') ? (new NovaResourceGenerator($model))->run() : null,
+                ])->filter()->values(),
+            ];
+        })->filter(function ($model) {
+            return ! $model->isEmpty();
+        })->each(function ($values, $model) {
+            $table = new Table($this->output);
+            $table->setHeaders([$model]);
 
-            if (config('generators.nova_resources')) {
-                $this->info((new NovaResourceGenerator($model))->run());
-            }
+            $table->setRows($values->map(function ($value) {
+                return [$value];
+            })->toArray());
 
-            $this->line('');
+            // Render the table to the output.
+            $table->render();
         });
 
-        $this->info('Running CS Fixer...');
-        new CSFixer();
+//        $this->info('Running CS Fixer...');
+//        new CSFixer();
         $this->info('Done.');
     }
 }

@@ -39,22 +39,31 @@ abstract class AbstractGenerator
     {
         $parsedStub = $this->populateStub();
         $cached = $this->getCache($this->getPath());
+        $currentFile = null;
+
+        if (File::exists($this->getpath())) {
+            $currentFile = File::get($this->getPath());
+        }
+
+        if ($currentFile === $parsedStub || $cached === $parsedStub) {
+            return null;
+        }
 
         if (! $cached || ! File::exists($this->getpath())) {
             File::put($this->getPath(), $parsedStub);
             $this->setCache($this->getPath(), $parsedStub);
 
-            return "  {$this->getType()} created successfully. <comment>[{$this->getPath()}]</comment>";
+            return "{$this->getType()} created successfully. <comment>[{$this->getPath()}]</comment>";
         }
 
-        if (File::get($this->getPath()) === $cached) {
+        if ($currentFile === $cached) {
             File::put($this->getPath(), $parsedStub);
             $this->setCache($this->getPath(), $parsedStub);
 
-            return "  {$this->getType()} updated successfully. <comment>[{$this->getPath()}]</comment>";
+            return "{$this->getType()} updated successfully. <comment>[{$this->getPath()}]</comment>";
         }
 
-        return "  {$this->getType()} was manually changed. <comment>[skipped]</comment>";
+        return "<fg=black;bg=yellow> {$this->getType()} was manually changed. </> <comment>[skipped]</comment>";
     }
 
     public function getType()

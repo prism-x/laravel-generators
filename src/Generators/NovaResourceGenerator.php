@@ -9,7 +9,10 @@ use PrismX\Generators\Support\AbstractGenerator;
 
 class NovaResourceGenerator extends AbstractGenerator
 {
-    protected $imports = [];
+    protected $imports = [
+        'Laravel\Nova\Fields\ID',
+        'Illuminate\Http\Request',
+    ];
 
     public function __construct(Model $model)
     {
@@ -72,7 +75,9 @@ class NovaResourceGenerator extends AbstractGenerator
 
     protected function buildImports()
     {
-        return collect($this->imports)->unique()->map(function ($import) {
+        return collect($this->imports)->unique()->sort(function ($a, $b) {
+            return strlen($a)-strlen($b);
+        })->map(function ($import) {
             return "use {$import};";
         })->implode(PHP_EOL);
     }

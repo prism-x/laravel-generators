@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use PrismX\Generators\Tests\TestCase;
 use PrismX\Generators\Generators\FactoryGenerator;
 
-class FactoryGeneratorTestTest extends TestCase
+class FactoryGeneratorTest extends TestCase
 {
     /**
      * @test
