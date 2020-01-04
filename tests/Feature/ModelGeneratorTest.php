@@ -28,24 +28,24 @@ class ModelGeneratorTest extends TestCase
         File::shouldReceive('exists')->with($path);
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/model/class.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/model/class.stub'));
+            ->with(STUBS_PATH.'/model/class.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/model/class.stub'));
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/model/fillable.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/model/fillable.stub'));
+            ->with(STUBS_PATH.'/model/fillable.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/model/fillable.stub'));
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/model/casts.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/model/casts.stub'));
+            ->with(STUBS_PATH.'/model/casts.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/model/casts.stub'));
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/model/dates.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/model/dates.stub'));
+            ->with(STUBS_PATH.'/model/dates.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/model/dates.stub'));
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/model/method.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/model/method.stub'));
+            ->with(STUBS_PATH.'/model/method.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/model/method.stub'));
 
         File::shouldReceive('put')
             ->with($path, $this->fixture($model));

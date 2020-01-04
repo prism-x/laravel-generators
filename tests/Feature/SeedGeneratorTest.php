@@ -24,8 +24,8 @@ class SeedGeneratorTest extends TestCase
         $generator = new SeedGenerator(collect($blueprint)->first());
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/seed.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/seed.stub'));
+            ->with(STUBS_PATH.'/seed.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/seed.stub'));
 
         File::shouldReceive('put')
             ->with($path, $this->fixture($seed));
@@ -47,7 +47,7 @@ class SeedGeneratorTest extends TestCase
     {
         return [
             ['definitions/post.bp', 'database/seeds/PostsTableSeeder.php', 'seeds/post.php'],
-            ['definitions/team.bp', 'database/seeds/TeamsTableSeeder.php', 'seeds/team.php']
+            ['definitions/team.bp', 'database/seeds/TeamsTableSeeder.php', 'seeds/team.php'],
         ];
     }
 }

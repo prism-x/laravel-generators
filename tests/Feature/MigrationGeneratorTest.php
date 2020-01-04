@@ -29,8 +29,8 @@ class MigrationGeneratorTest extends TestCase
         $timestamp_path = str_replace('timestamp', $now->format('Y_m_d_His'), $path);
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/migration.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/migration.stub'));
+            ->with(STUBS_PATH.'/migration.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/migration.stub'));
 
         File::shouldReceive('put')
             ->with($timestamp_path, $this->fixture($migration));

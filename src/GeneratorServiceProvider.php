@@ -16,12 +16,12 @@ class GeneratorServiceProvider extends ServiceProvider
         }
 
         if (! defined('STUBS_PATH')) {
-            define('STUBS_PATH', dirname(__DIR__) . '/stubs');
+            define('STUBS_PATH', dirname(__DIR__).'/stubs');
         }
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'generators');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'generators');
     }
 }
