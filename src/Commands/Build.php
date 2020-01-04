@@ -18,8 +18,31 @@ class Build extends Command
 
     protected $description = 'Command description';
     protected $blueprint = [];
+    protected $contents;
 
     public function handle()
+    {
+        $this->parseBlueprint();
+        $this->parseOptions();
+
+        $this->blueprint = (new Lexer())->analyze($this->contents['models'] ?? []);
+
+        collect($this->blueprint)->each(function ($model) {
+            $this->info('+--------------------');
+            $this->info("| {$model->name()}");
+            $this->info('+--------------------');
+
+            $this->info((new FactoryGenerator($model))->run());
+            $this->info((new MigrationGenerator($model))->run());
+            $this->info((new ModelGenerator($model))->run());
+            $this->info((new NovaResourceGenerator($model))->run());
+            $this->info((new SeedGenerator($model))->run());
+
+            $this->line('');
+        });
+    }
+
+    public function parseBlueprint()
     {
         $file = $this->argument('blueprint');
         if (! file_exists($file)) {
@@ -30,20 +53,13 @@ class Build extends Command
             return $matches[1] . strtolower($matches[2]) . ': ' . $matches[2];
         }, File::get($file));
 
-        $contents = Yaml::parse($content);
+        $this->contents = Yaml::parse($content);
+    }
 
-        $this->blueprint = (new Lexer())->analyze($contents);
-
-        collect($this->blueprint)->each(function ($model) {
-            $this->info('********************');
-            $this->info("* {$model->name()}");
-            $this->info('********************');
-            $this->info((new FactoryGenerator($model))->run());
-            $this->info((new MigrationGenerator($model))->run());
-            $this->info((new ModelGenerator($model))->run());
-            $this->info((new NovaResourceGenerator($model))->run());
-            $this->info((new SeedGenerator($model))->run());
-            $this->line('');
-        });
+    public function parseOptions()
+    {
+        $config = array_merge(config('generators'), $this->contents['options'] ?? []);
+        config(['generators' => $config]);
+        dd(config('generators'));
     }
 }

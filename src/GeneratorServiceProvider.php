@@ -13,10 +13,6 @@ class GeneratorServiceProvider extends ServiceProvider
             $this->commands([
                 Build::class,
             ]);
-
-            $this->publishes([
-                __DIR__ . '/../config/generators.php' => config_path('generators.php'),
-            ], 'config');
         }
 
         if (! defined('STUBS_PATH')) {
@@ -26,6 +22,6 @@ class GeneratorServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/generators.php', 'generators');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'generators');
     }
 }
