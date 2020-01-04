@@ -1,3 +1,4 @@
-Comment:
-  post_id: id
-  softdeletes
+models:
+  Comment:
+    post_id: id
+    softdeletes

@@ -1,6 +1,7 @@
-Post:
-  title: string
-  author_id: id
-  content: bigtext nullable
-  published_at: timestamp nullable
-  word_count: integer unsigned
+models:
+  Post:
+    title: string
+    author_id: id
+    content: bigtext nullable
+    published_at: timestamp nullable
+    word_count: integer unsigned

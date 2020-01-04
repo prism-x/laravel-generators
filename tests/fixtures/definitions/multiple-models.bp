@@ -1,5 +1,6 @@
-Post:
-  title: string
+models:
+  Post:
+    title: string
 
-Comment:
-  content: text
+  Comment:
+    content: text

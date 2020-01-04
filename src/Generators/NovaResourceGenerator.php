@@ -11,43 +11,20 @@ class NovaResourceGenerator extends AbstractGenerator
 {
     protected $imports = [];
 
-    public function run()
+    public function __construct(Model $model)
     {
-        if (! config('generators.generate_nova_resource')) {
-            return;
-        }
-
-        $stub = File::get(STUBS_PATH . '/novaResource.stub');
-        File::put($this->getPath(), $this->populateStub($stub));
-        return "{$this->model->name()} nova resource created successfully <comment>[{$this->getPath()}]</comment>";
+        parent::__construct($model);
+        $this->stub = File::get(STUBS_PATH . '/novaResource.stub');
     }
 
-//    public function output()
-//    {
-//        if (! config('generators.generate_nova_resource')) {
-//            return null;
-//        }
-//        $output = [];
-//
-//        $stub = File::get(STUBS_PATH . '/novaResource.stub');
-//
-//        foreach ($this->tree as $model) {
-//            $path = $this->getPath($model);
-//            File::put($path, $this->populateStub($stub, $model));
-//
-////            $this->info(crea)$path;
-//        }
-//
-//        return $output;
-//    }
-
-    protected function getPath()
+    protected function getPath(): string
     {
         return "app/Nova/{$this->model->name()}.php";
     }
 
-    protected function populateStub(string $stub)
+    public function populateStub(): string
     {
+        $stub = $this->stub;
         $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
         $stub = str_replace('{{ModelName}}', '\\' . config('generators.model_namespace') . "\\{$this->model->name()}", $stub);
         $stub = str_replace('{{fields}}', $this->buildDefinition(), $stub);

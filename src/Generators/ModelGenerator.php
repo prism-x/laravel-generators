@@ -4,6 +4,7 @@ namespace PrismX\Generators\Generators;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use PrismX\Generators\Support\Model;
 use PrismX\Generators\Support\Column;
 use PrismX\Generators\Support\AbstractGenerator;
 
@@ -11,25 +12,21 @@ class ModelGenerator extends AbstractGenerator
 {
     protected $dir;
 
-    public function run(): ?string
+    public function __construct(Model $model)
     {
-        $stub = File::get(STUBS_PATH . '/model/class.stub');
+        parent::__construct($model);
+        $this->stub = File::get(STUBS_PATH . '/model/class.stub');
+
         $this->dir = Str::camel(str_replace('\\', '/', config('generators.model_namespace')));
 
         if (! File::isDirectory($this->dir)) {
             File::makeDirectory($this->dir);
         }
-
-        if (File::exists($this->getPath())) {
-            return "{$this->model->name()} model already exists <comment>[skipped]</comment>";
-        }
-
-        File::put($this->getPath(), $this->populateStub($stub));
-        return "{$this->model->name()} model created successfully <comment>[{$this->getPath()}]</comment>";
     }
 
-    public function populateStub(string $stub): string
+    public function populateStub(): string
     {
+        $stub = $this->stub;
         $stub = str_replace('{{Namespace}}', config('generators.model_namespace'), $stub);
         $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
         $body = $this->buildProperties();
@@ -39,6 +36,11 @@ class ModelGenerator extends AbstractGenerator
         $stub = $this->addTraits($stub);
 
         return $stub;
+    }
+
+    public function getPath(): string
+    {
+        return "{$this->dir}/{$this->model->name()}.php";
     }
 
     private function buildProperties()
@@ -83,11 +85,6 @@ class ModelGenerator extends AbstractGenerator
         }
 
         return $methods;
-    }
-
-    public function getPath()
-    {
-        return "{$this->dir}/{$this->model->name()}.php";
     }
 
     private function fillableColumns(array $columns)

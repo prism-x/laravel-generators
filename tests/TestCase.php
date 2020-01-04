@@ -15,6 +15,10 @@ class TestCase extends OrchestraTestCase
     {
         return file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR));
     }
+    public function fixturePath(string $path)
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+    }
 
     protected function getPackageProviders($app)
     {

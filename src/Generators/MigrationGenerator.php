@@ -5,18 +5,19 @@ namespace PrismX\Generators\Generators;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use PrismX\Generators\Support\AbstractGenerator;
+use PrismX\Generators\Support\Model;
 
 class MigrationGenerator extends AbstractGenerator
 {
-    public function run()
+    public function __construct(Model $model)
     {
-        $stub = File::get(STUBS_PATH . '/migration.stub');
-        File::put($this->getPath(), $this->populateStub($stub));
-        return "{$this->model->name()} migration created successfully <comment>[{$this->getPath()}]</comment>";
+        parent::__construct($model);
+        $this->stub = File::get(STUBS_PATH . '/migration.stub');
     }
 
-    protected function populateStub(string $stub)
+    public function populateStub(): string
     {
+        $stub = $this->stub;
         $stub = str_replace('{{ClassName}}', $this->getClassName(), $stub);
         $stub = str_replace('{{TableName}}', $this->model->tableName(), $stub);
         $stub = str_replace('{{schema}}', $this->buildDefinition(), $stub);
@@ -75,7 +76,7 @@ class MigrationGenerator extends AbstractGenerator
         return 'Create' . Str::studly($this->model->tableName()) . 'Table';
     }
 
-    protected function getPath()
+    protected function getPath(): string
     {
         $check = glob('database/migrations/*_create_' . $this->model->tableName() . '_table.php');
 

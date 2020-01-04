@@ -2,9 +2,8 @@
 
 namespace PrismX\Generators\Tests\Feature;
 
-use Symfony\Component\Yaml\Yaml;
+use PrismX\Generators\Blueprint;
 use Illuminate\Support\Facades\File;
-use PrismX\Generators\Support\Lexer;
 use PrismX\Generators\Tests\TestCase;
 use PrismX\Generators\Generators\FactoryGenerator;
 
@@ -20,9 +19,9 @@ class FactoryGeneratorTestTest extends TestCase
      */
     public function it_can_create_a_factory($definition, $path, $factory)
     {
-        $contents = Yaml::parse($this->parseDefinition($this->fixture($definition)));
-        $blueprint = collect((new Lexer())->analyze($contents))->first();
-        $generator = new FactoryGenerator($blueprint);
+        $blueprint = Blueprint::make($this->fixturePath($definition));
+
+        $generator = new FactoryGenerator(collect($blueprint)->first());
 
         File::shouldReceive('get')
             ->with(STUBS_PATH . '/factory.stub')
@@ -31,9 +30,15 @@ class FactoryGeneratorTestTest extends TestCase
         File::shouldReceive('put')
             ->with($path, $this->fixture($factory));
 
-        $stub = $generator->populateStub(file_get_contents(STUBS_PATH . '/factory.stub'));
+        File::shouldReceive('get')
+            ->with($path)
+            ->andReturn($this->fixture($factory));
 
-        $this->assertEquals($stub, $this->fixture($factory));
+        File::shouldReceive('exists')
+            ->with($path)
+            ->andReturn(true);
+
+        $this->assertEquals($generator->populateStub(), $this->fixture($factory));
 
         $generator->run();
     }

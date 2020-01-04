@@ -1,3 +1,4 @@
-Team:
-  name: string
-  owner_id: id:user
+models:
+  Team:
+    name: string
+    owner_id: id:user

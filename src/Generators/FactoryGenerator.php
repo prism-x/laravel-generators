@@ -4,26 +4,27 @@ namespace PrismX\Generators\Generators;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use PrismX\Generators\Support\Model;
 use PrismX\Generators\Support\AbstractGenerator;
 
 class FactoryGenerator extends AbstractGenerator
 {
     const INDENT = '        ';
 
-    public function run(): string
+    public function __construct(Model $model)
     {
-        $stub = File::get(STUBS_PATH . '/factory.stub');
-        File::put($this->getPath(), $this->populateStub($stub));
-        return "{$this->model->name()} factory created successfully <comment>[{$this->getPath()}]</comment>";
+        parent::__construct($model);
+        $this->stub = File::get(STUBS_PATH . '/factory.stub');
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return 'database/factories/' . $this->model->name() . 'Factory.php';
     }
 
-    public function populateStub(string $stub)
+    public function populateStub(): string
     {
+        $stub = $this->stub;
         $stub = str_replace('{{Namespace}}', config('generators.model_namespace'), $stub);
         $stub = str_replace('{{ClassName}}', $this->model->name(), $stub);
         $stub = str_replace('{{fields}}', $this->buildDefinition(), $stub);
