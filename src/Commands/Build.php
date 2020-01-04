@@ -28,23 +28,6 @@ class Build extends Command
 
         $this->blueprint = Blueprint::make($file);
 
-//        collect($this->blueprint)->each(function ($model) {
-//            $this->info('+--------------------');
-//            $this->info("| {$model->name()}");
-//            $this->info('+--------------------');
-//
-//            $this->info((new FactoryGenerator($model))->run());
-//            $this->info((new MigrationGenerator($model))->run());
-//            $this->info((new ModelGenerator($model))->run());
-//            $this->info((new SeedGenerator($model))->run());
-//
-//            if (config('generators.nova_resources')) {
-//                $this->info((new NovaResourceGenerator($model))->run());
-//            }
-//
-//            $this->line('');
-//        });
-
         collect($this->blueprint)->mapWithKeys(function ($model) {
             return [
                 $model->name() => collect([
