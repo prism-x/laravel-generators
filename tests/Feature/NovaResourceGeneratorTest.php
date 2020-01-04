@@ -2,10 +2,10 @@
 
 namespace PrismX\Generators\Tests\Feature;
 
-use PrismX\Generators\Blueprint;
 use Illuminate\Support\Facades\File;
-use PrismX\Generators\Tests\TestCase;
+use PrismX\Generators\Blueprint;
 use PrismX\Generators\Generators\NovaResourceGenerator;
+use PrismX\Generators\Tests\TestCase;
 
 class NovaResourceGeneratorTest extends TestCase
 {
@@ -24,8 +24,8 @@ class NovaResourceGeneratorTest extends TestCase
         $generator = new NovaResourceGenerator(collect($blueprint)->first());
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH . '/novaResource.stub')
-            ->andReturn(file_get_contents(STUBS_PATH . '/novaResource.stub'));
+            ->with(STUBS_PATH.'/novaResource.stub')
+            ->andReturn(file_get_contents(STUBS_PATH.'/novaResource.stub'));
 
         File::shouldReceive('put')
             ->with($path, $this->fixture($resource));
@@ -47,7 +47,7 @@ class NovaResourceGeneratorTest extends TestCase
     {
         return [
             ['definitions/post.bp', 'app/Nova/Post.php', 'nova-resources/post.php'],
-            ['definitions/team.bp', 'app/Nova/Team.php', 'nova-resources/team.php']
+            ['definitions/team.bp', 'app/Nova/Team.php', 'nova-resources/team.php'],
         ];
     }
 }
