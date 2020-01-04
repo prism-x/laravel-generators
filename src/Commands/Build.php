@@ -21,7 +21,7 @@ class Build extends Command
 
     public function handle()
     {
-        $file = $this->argument('blueprint');
+        $file = (string) $this->argument('blueprint');
         if (! file_exists($file)) {
             $this->error('Blueprint file could not be found: '.$file);
         }

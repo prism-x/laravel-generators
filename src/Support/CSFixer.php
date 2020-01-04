@@ -42,6 +42,6 @@ class CSFixer
             base_path('database/migrations'),
             base_path('database/seeds'),
             File::isDirectory('app/Nova') ? base_path('app/nova') : null,
-        ])->concat($models)->filter();
+        ])->concat($models ?? [])->filter();
     }
 }
