@@ -2,8 +2,8 @@
 
 namespace PrismX\Generators\Generators;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use PrismX\Generators\Support\AbstractGenerator;
 use PrismX\Generators\Support\Model;
 
@@ -12,7 +12,7 @@ class MigrationGenerator extends AbstractGenerator
     public function __construct(Model $model)
     {
         parent::__construct($model);
-        $this->stub = File::get(STUBS_PATH.'/migration.stub');
+        $this->stub = File::get(STUBS_PATH . '/migration.stub');
     }
 
     public function populateStub(): string
@@ -37,7 +37,7 @@ class MigrationGenerator extends AbstractGenerator
                 $dataType = 'unsignedBigInteger';
             }
 
-            $definition .= self::INDENT.'$table->'.$dataType."('{$column->name()}'";
+            $definition .= self::INDENT . '$table->' . $dataType . "('{$column->name()}'";
 
             if (! empty($column->attributes()) && $column->dataType() !== 'id') {
                 $definition .= ', ';
@@ -51,21 +51,21 @@ class MigrationGenerator extends AbstractGenerator
 
             foreach ($column->modifiers() as $modifier) {
                 if (is_array($modifier)) {
-                    $definition .= '->'.key($modifier).'('.current($modifier).')';
+                    $definition .= "->" . key($modifier) . "(" . current($modifier) . ")";
                 } else {
-                    $definition .= '->'.$modifier.'()';
+                    $definition .= '->' . $modifier . '()';
                 }
             }
 
-            $definition .= ';'.PHP_EOL;
+            $definition .= ';' . PHP_EOL;
         }
 
         if ($this->model->usesSoftDeletes()) {
-            $definition .= self::INDENT.'$table->'.$this->model->softDeletesDataType().'();'.PHP_EOL;
+            $definition .= self::INDENT . '$table->' . $this->model->softDeletesDataType() . '();' . PHP_EOL;
         }
 
         if ($this->model->usesTimestamps()) {
-            $definition .= self::INDENT.'$table->'.$this->model->timestampsDataType().'();'.PHP_EOL;
+            $definition .= self::INDENT . '$table->' . $this->model->timestampsDataType() . '();' . PHP_EOL;
         }
 
         return trim($definition);
@@ -73,13 +73,13 @@ class MigrationGenerator extends AbstractGenerator
 
     protected function getClassName()
     {
-        return 'Create'.Str::studly($this->model->tableName()).'Table';
+        return 'Create' . Str::studly($this->model->tableName()) . 'Table';
     }
 
     protected function getPath(): string
     {
-        $check = glob('database/migrations/*_create_'.$this->model->tableName().'_table.php');
+        $check = glob('database/migrations/*_create_' . $this->model->tableName() . '_table.php');
 
-        return $check[0] ?? 'database/migrations/'.\Carbon\Carbon::now()->format('Y_m_d_His').'_create_'.$this->model->tableName().'_table.php';
+        return $check[0] ?? 'database/migrations/' . \Carbon\Carbon::now()->format('Y_m_d_His') . '_create_' . $this->model->tableName() . '_table.php';
     }
 }

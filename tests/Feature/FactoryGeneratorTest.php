@@ -2,10 +2,10 @@
 
 namespace PrismX\Generators\Tests\Feature;
 
-use Illuminate\Support\Facades\File;
 use PrismX\Generators\Blueprint;
-use PrismX\Generators\Generators\FactoryGenerator;
+use Illuminate\Support\Facades\File;
 use PrismX\Generators\Tests\TestCase;
+use PrismX\Generators\Generators\FactoryGenerator;
 
 class FactoryGeneratorTest extends TestCase
 {
@@ -24,8 +24,8 @@ class FactoryGeneratorTest extends TestCase
         $generator = new FactoryGenerator(collect($blueprint)->first());
 
         File::shouldReceive('get')
-            ->with(STUBS_PATH.'/factory.stub')
-            ->andReturn(file_get_contents(STUBS_PATH.'/factory.stub'));
+            ->with(STUBS_PATH . '/factory.stub')
+            ->andReturn(file_get_contents(STUBS_PATH . '/factory.stub'));
 
         File::shouldReceive('put')
             ->with($path, $this->fixture($factory));
@@ -47,7 +47,7 @@ class FactoryGeneratorTest extends TestCase
     {
         return [
             ['definitions/post.bp', 'database/factories/PostFactory.php', 'factories/post.php'],
-            ['definitions/team.bp', 'database/factories/TeamFactory.php', 'factories/team.php'],
+            ['definitions/team.bp', 'database/factories/TeamFactory.php', 'factories/team.php']
         ];
     }
 }

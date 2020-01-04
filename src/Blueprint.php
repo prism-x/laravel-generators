@@ -2,9 +2,9 @@
 
 namespace PrismX\Generators;
 
+use Symfony\Component\Yaml\Yaml;
 use Illuminate\Support\Facades\File;
 use PrismX\Generators\Support\Lexer;
-use Symfony\Component\Yaml\Yaml;
 
 class Blueprint
 {
@@ -20,7 +20,7 @@ class Blueprint
     public function __construct(string $file)
     {
         $content = preg_replace_callback('/^(\s+)(id|timestamps(Tz)?|softDeletes(Tz)?)$/mi', function ($matches) {
-            return $matches[1].strtolower($matches[2]).': '.$matches[2];
+            return $matches[1] . strtolower($matches[2]) . ': ' . $matches[2];
         }, File::get($file));
 
         $this->contents = Yaml::parse($content);

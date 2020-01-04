@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateModifiersTable extends Migration
 {
@@ -15,7 +15,7 @@ class CreateModifiersTable extends Migration
             $table->string('content')->default('');
             $table->decimal('total', 10, 2);
             $table->char('ssn', 11);
-            $table->enum('role', ['user', 'admin', 'owner']);
+            $table->enum('role', ["user","admin","owner"]);
             $table->timestamps();
         });
     }
