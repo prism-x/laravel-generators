@@ -2,10 +2,9 @@
 
 namespace PrismX\Generators\Tests;
 
-use Illuminate\Support\Facades\File;
-use PrismX\Generators\GeneratorServiceProvider;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PrismX\Generators\GeneratorServiceProvider;
 
 class TestCase extends OrchestraTestCase
 {
@@ -13,11 +12,12 @@ class TestCase extends OrchestraTestCase
 
     public function fixture(string $path)
     {
-        return file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR));
+        return file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR));
     }
+
     public function fixturePath(string $path)
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR);
+        return __DIR__.DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR);
     }
 
     protected function getPackageProviders($app)
@@ -28,7 +28,7 @@ class TestCase extends OrchestraTestCase
     protected function parseDefinition($contents)
     {
         return preg_replace_callback('/^(\s+)(id|timestamps(Tz)?|softDeletes(Tz)?)$/mi', function ($matches) {
-            return $matches[1] . strtolower($matches[2]) . ': ' . $matches[2];
+            return $matches[1].strtolower($matches[2]).': '.$matches[2];
         }, $contents);
     }
 }

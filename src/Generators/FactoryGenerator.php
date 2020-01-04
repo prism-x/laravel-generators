@@ -2,10 +2,10 @@
 
 namespace PrismX\Generators\Generators;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use PrismX\Generators\Support\Model;
+use Illuminate\Support\Str;
 use PrismX\Generators\Support\AbstractGenerator;
+use PrismX\Generators\Support\Model;
 
 class FactoryGenerator extends AbstractGenerator
 {
@@ -14,12 +14,12 @@ class FactoryGenerator extends AbstractGenerator
     public function __construct(Model $model)
     {
         parent::__construct($model);
-        $this->stub = File::get(STUBS_PATH . '/factory.stub');
+        $this->stub = File::get(STUBS_PATH.'/factory.stub');
     }
 
     public function getPath(): string
     {
-        return 'database/factories/' . $this->model->name() . 'Factory.php';
+        return 'database/factories/'.$this->model->name().'Factory.php';
     }
 
     public function populateStub(): string
@@ -45,14 +45,14 @@ class FactoryGenerator extends AbstractGenerator
                 $name = Str::substr($column->name(), 0, -3);
                 $class = Str::studly($column->attributes()[0] ?? $name);
 
-                $definition .= self::INDENT . "'{$column->name()}' => ";
-                $definition .= sprintf("factory(\\".config('generators.model_namespace')."\%s::class)", $class);
-                $definition .= ',' . PHP_EOL;
+                $definition .= self::INDENT."'{$column->name()}' => ";
+                $definition .= sprintf('factory(\\'.config('generators.model_namespace')."\%s::class)", $class);
+                $definition .= ','.PHP_EOL;
             } else {
-                $definition .= self::INDENT . "'{$column->name()}' => ";
+                $definition .= self::INDENT."'{$column->name()}' => ";
                 $faker = $this->fakerData($column->name()) ?? $this->fakerDataType($column->dataType());
-                $definition .= '$faker->' . $faker;
-                $definition .= ',' . PHP_EOL;
+                $definition .= '$faker->'.$faker;
+                $definition .= ','.PHP_EOL;
             }
         }
 
@@ -116,7 +116,7 @@ class FactoryGenerator extends AbstractGenerator
             'smallint' => 'randomNumber()',
             'decimal' => 'randomFloat()',
             'float' => 'randomFloat()',
-            'boolean' => 'boolean'
+            'boolean' => 'boolean',
         ];
 
         return $fakeableTypes[$type] ?? null;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PrismX\Generators\Support;
 
 class Lexer
@@ -113,7 +112,7 @@ class Lexer
             unset($columns['softdeletestz']);
         }
 
-        if (!isset($columns['id'])) {
+        if (! isset($columns['id'])) {
             $column = $this->buildColumn('id', 'id');
             $model->addColumn($column);
         }
@@ -144,7 +143,7 @@ class Lexer
             } elseif (isset(self::$dataTypes[strtolower($value)])) {
                 $attributes = $parts[1] ?? null;
                 $data_type = self::$dataTypes[strtolower($value)];
-                if (!empty($attributes)) {
+                if (! empty($attributes)) {
                     $attributes = explode(',', $attributes);
                 }
             }

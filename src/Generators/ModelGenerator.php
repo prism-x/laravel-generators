@@ -2,11 +2,11 @@
 
 namespace PrismX\Generators\Generators;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use PrismX\Generators\Support\Model;
-use PrismX\Generators\Support\Column;
+use Illuminate\Support\Str;
 use PrismX\Generators\Support\AbstractGenerator;
+use PrismX\Generators\Support\Column;
+use PrismX\Generators\Support\Model;
 
 class ModelGenerator extends AbstractGenerator
 {
@@ -15,7 +15,7 @@ class ModelGenerator extends AbstractGenerator
     public function __construct(Model $model)
     {
         parent::__construct($model);
-        $this->stub = File::get(STUBS_PATH . '/model/class.stub');
+        $this->stub = File::get(STUBS_PATH.'/model/class.stub');
 
         $this->dir = Str::camel(str_replace('\\', '/', config('generators.model_namespace')));
 
@@ -48,17 +48,17 @@ class ModelGenerator extends AbstractGenerator
         $properties = '';
         $columns = $this->fillableColumns($this->model->columns());
         if (! empty($columns)) {
-            $properties .= PHP_EOL . str_replace('[]', $this->pretty_print_array($columns, false), $this->getStub('fillable'));
+            $properties .= PHP_EOL.str_replace('[]', $this->pretty_print_array($columns, false), $this->getStub('fillable'));
         } else {
             $properties .= $this->getStub('fillable');
         }
         $columns = $this->castableColumns($this->model->columns());
         if (! empty($columns)) {
-            $properties .= PHP_EOL . str_replace('[]', $this->pretty_print_array($columns), $this->getStub('casts'));
+            $properties .= PHP_EOL.str_replace('[]', $this->pretty_print_array($columns), $this->getStub('casts'));
         }
         $columns = $this->dateColumns($this->model->columns());
         if (! empty($columns)) {
-            $properties .= PHP_EOL . str_replace('[]', $this->pretty_print_array($columns, false), $this->getStub('dates'));
+            $properties .= PHP_EOL.str_replace('[]', $this->pretty_print_array($columns, false), $this->getStub('dates'));
         }
 
         return trim($properties);
@@ -78,10 +78,10 @@ class ModelGenerator extends AbstractGenerator
         foreach ($columns as $column) {
             $name = Str::substr($column->name(), 0, -3);
             $class = Str::studly($column->attributes()[0] ?? $name);
-            $relationship = sprintf("\$this->belongsTo(\\" . config('generators.model_namespace') . "\%s::class)", $class);
+            $relationship = sprintf('$this->belongsTo(\\'.config('generators.model_namespace')."\%s::class)", $class);
             $method = str_replace('{{MethodName}}', Str::camel($name), $template);
             $method = str_replace('null', $relationship, $method);
-            $methods .= PHP_EOL . $method;
+            $methods .= PHP_EOL.$method;
         }
 
         return $methods;
@@ -131,13 +131,11 @@ class ModelGenerator extends AbstractGenerator
         }
         if (in_array($column->dataType(), ['decimal', 'unsignedDecimal'])) {
             if ($column->attributes()) {
-                return 'decimal:' . $column->attributes()[1];
+                return 'decimal:'.$column->attributes()[1];
             }
 
             return 'decimal';
         }
-
-        return null;
     }
 
     private function pretty_print_array(array $data, $assoc = true)
@@ -156,7 +154,7 @@ class ModelGenerator extends AbstractGenerator
     {
         static $stubs = [];
         if (empty($stubs[$stub])) {
-            $stubs[$stub] = File::get(STUBS_PATH . '/model/' . $stub . '.stub');
+            $stubs[$stub] = File::get(STUBS_PATH.'/model/'.$stub.'.stub');
         }
 
         return $stubs[$stub];
@@ -167,8 +165,8 @@ class ModelGenerator extends AbstractGenerator
         if (! $this->model->usesSoftDeletes()) {
             return $stub;
         }
-        $stub = str_replace('use Illuminate\\Database\\Eloquent\\Model;', 'use Illuminate\\Database\\Eloquent\\Model;' . PHP_EOL . 'use Illuminate\\Database\\Eloquent\\SoftDeletes;', $stub);
-        $stub = preg_replace('/^\\{$/m', '{' . PHP_EOL . '    use SoftDeletes;' . PHP_EOL, $stub);
+        $stub = str_replace('use Illuminate\\Database\\Eloquent\\Model;', 'use Illuminate\\Database\\Eloquent\\Model;'.PHP_EOL.'use Illuminate\\Database\\Eloquent\\SoftDeletes;', $stub);
+        $stub = preg_replace('/^\\{$/m', '{'.PHP_EOL.'    use SoftDeletes;'.PHP_EOL, $stub);
 
         return $stub;
     }
