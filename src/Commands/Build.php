@@ -23,7 +23,7 @@ class Build extends Command
     {
         $file = (string) $this->argument('blueprint');
         if (! file_exists($file)) {
-            $this->error('Blueprint file could not be found: '.$file);
+            $this->error('Blueprint file could not be found: ' . $file);
         }
 
         $this->blueprint = Blueprint::make($file);
@@ -52,8 +52,11 @@ class Build extends Command
             $table->render();
         });
 
-//        $this->info('Running CS Fixer...');
-//        new CSFixer();
+        if (config('generators.cs_fixer')) {
+            $this->info('Running CS Fixer...');
+            new CSFixer();
+        }
+
         $this->info('Done.');
     }
 }
