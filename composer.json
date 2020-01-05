@@ -17,7 +17,7 @@
   "require" : {
     "php": "^7.3",
     "illuminate/support": "^6.8",
-    "symfony/yaml": "^5.0"
+    "symfony/yaml": "^4.4.2"
   },
   "require-dev" : {
     "nunomaduro/collision": "^3.0",
