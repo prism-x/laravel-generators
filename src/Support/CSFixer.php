@@ -35,13 +35,16 @@ class CSFixer
         $modelsPath = Str::camel(str_replace('\\', '/', config('generators.model_namespace')));
 
         $models = glob(base_path($modelsPath.'/*.php'));
+        $caches = glob(base_path(Storage::path('generators/cache').'/*.php'));
 
         return collect([
-            Storage::path('generators/cache'),
             base_path('database/factories'),
             base_path('database/migrations'),
             base_path('database/seeds'),
             File::isDirectory('app/Nova') ? base_path('app/nova') : null,
-        ])->concat($models ?: [])->filter();
+        ])
+            ->concat($models ?: [])
+            ->concat($caches ?: [])
+            ->filter();
     }
 }
